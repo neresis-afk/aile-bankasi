@@ -1,0 +1,11 @@
+# Never commit these — they contain private credentials
+token.json
+client_secret.json
+spreadsheet_id.txt
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
