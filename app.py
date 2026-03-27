@@ -429,11 +429,18 @@ with col_usr:
     st.markdown(f'<div class="user-badge">✅ {user_email}</div>', unsafe_allow_html=True)
 with col_out:
     if st.button("🚪 Çıkış"):
-        if os.path.exists(TOKEN_FILE):
-            os.remove(TOKEN_FILE)
         for k in ["oauth_flow", "oauth_url", "verified_email", "allowance_applied"]:
             st.session_state.pop(k, None)
-        st.rerun()
+        if is_cloud():
+            # On Cloud the token lives in secrets (read-only).
+            # We can only clear the session; the app will reload
+            # and show the access-denied or login screen correctly.
+            st.info("Oturum kapatıldı. Sayfayı yenileyebilirsiniz.")
+            st.stop()
+        else:
+            if os.path.exists(TOKEN_FILE):
+                os.remove(TOKEN_FILE)
+            st.rerun()
 
 tabs = st.tabs([f"{CHILDREN[c]['emoji']}  {c}" for c in CHILDREN])
 
